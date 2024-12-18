@@ -18,19 +18,29 @@ import android.view.WindowManager
 import android.widget.Toast
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
+import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableIntStateOf
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.ImageBitmap
 import androidx.compose.ui.res.imageResource
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
 import androidx.wear.compose.material.Button
 import androidx.wear.compose.material.ButtonDefaults
+import androidx.wear.compose.material.HorizontalPageIndicator
 import androidx.wear.compose.material.Icon
+import androidx.wear.compose.material.PageIndicatorDefaults
+import androidx.wear.compose.material.PageIndicatorState
 import com.nachtgeistw.igiari_watch.R
 import kotlin.math.abs
 
@@ -114,8 +124,32 @@ fun playMedia(context: Context, audioId: Int)
     mediaPlayer.start()
 }
 
+
 @Composable
 private fun Igiari(context: Context) {
+    val maxPages = 3
+    var selectedPage by remember { mutableIntStateOf(1) }
+    var finalValue by remember { mutableIntStateOf(1) }
+
+    val animatedSelectedPage by
+    animateFloatAsState(
+        targetValue = selectedPage.toFloat(), label = "",
+    ) {
+        finalValue = it.toInt()
+    }
+    val pageIndicatorState: PageIndicatorState = remember {
+        object : PageIndicatorState {
+            override val pageOffset: Float
+                get() = animatedSelectedPage - finalValue
+
+            override val selectedPage: Int
+                get() = finalValue
+
+            override val pageCount: Int
+                get() = maxPages
+        }
+    }
+
     Box(
         modifier = Modifier.fillMaxSize(),
         contentAlignment = Alignment.Center
@@ -124,16 +158,12 @@ private fun Igiari(context: Context) {
             modifier = Modifier.fillMaxSize(),
             onClick = { playMedia(context, R.raw.se00e) }
         ) {
-//            Icon(
-//                imageVector = Icons.Rounded.Phone,
-//                contentDescription = "triggers phone action",
-//                modifier = iconModifier
-//            )
             Image(
                 modifier = Modifier.fillMaxSize(),
                 bitmap = ImageBitmap.imageResource(id = R.drawable.etc00a),
                 contentDescription = "play igiari sound"
             )
         }
+        HorizontalPageIndicator(pageIndicatorState = pageIndicatorState)
     }
 }
