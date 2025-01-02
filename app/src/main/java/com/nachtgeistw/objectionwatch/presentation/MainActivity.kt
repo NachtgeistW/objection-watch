@@ -4,7 +4,7 @@
  * changes to the libraries and their usages.
  */
 
-package com.nachtgeistw.igiari_watch.presentation
+package com.nachtgeistw.objectionwatch.presentation
 
 import android.content.Context
 import android.hardware.Sensor
@@ -17,27 +17,19 @@ import android.view.WindowManager
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.compose.animation.core.animateFloatAsState
-import androidx.compose.foundation.Image
-import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.pager.HorizontalPager
-import androidx.compose.foundation.pager.rememberPagerState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableIntStateOf
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.ImageBitmap
-import androidx.compose.ui.res.imageResource
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
-import androidx.wear.compose.material.Button
-import androidx.wear.compose.material.HorizontalPageIndicator
 import androidx.wear.compose.material.PageIndicatorState
-import androidx.wear.compose.material.Scaffold
-import com.nachtgeistw.igiari_watch.R
+import androidx.wear.compose.navigation.rememberSwipeDismissableNavController
+import androidx.wear.compose.navigation.rememberSwipeDismissableNavHostState
+import com.nachtgeistw.objectionwatch.R
 import kotlin.math.abs
 
 class MainActivity : ComponentActivity(), SensorEventListener {
@@ -60,7 +52,7 @@ class MainActivity : ComponentActivity(), SensorEventListener {
         window.addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON)
 
         setContent {
-            Igiari(this)
+            Objection(this)
         }
     }
 
@@ -116,16 +108,78 @@ fun playMedia(context: Context, audioId: Int) {
     mediaPlayer.start()
 }
 
+//@Composable
+//private fun Igiari(context: Context) {
+//    val maxPages = 3
+//    var selectedPage by remember { mutableIntStateOf(1) }
+//    var finalValue by remember { mutableIntStateOf(1) }
+//    val pagerState = rememberPagerState(initialPage = 1, pageCount = { maxPages })
+//
+//    val animatedSelectedPage by
+//    animateFloatAsState(
+//        targetValue = selectedPage.toFloat(), label = "",
+//    ) {
+//        finalValue = it.toInt()
+//    }
+//    val pageIndicatorState: PageIndicatorState = remember {
+//        object : PageIndicatorState {
+//            override val pageOffset: Float
+//                get() = animatedSelectedPage - finalValue
+//
+//            override val selectedPage: Int
+//                get() = finalValue
+//
+//            override val pageCount: Int
+//                get() = maxPages
+//        }
+//    }
+//
+//    Scaffold(
+//        modifier = Modifier
+//            .fillMaxSize()
+//    )
+//    {
+//        Box(
+//            modifier = Modifier
+//                .fillMaxSize(),
+//            contentAlignment = Alignment.Center
+//        ) {
+//            HorizontalPager(
+//                modifier = Modifier.fillMaxSize(),
+//                state = pagerState
+//            ) { page ->
+//                IgiariButton(
+//                    modifier = Modifier.fillMaxSize(),
+//                    onClick = { playMedia(context, R.raw.se00e) }
+//                )
+////                Text(
+////                    modifier = Modifier.align(alignment = Alignment.Center),
+////                    text = "Page: $page",
+////                )
+//                selectedPage = page
+//            }
+//
+//            HorizontalPageIndicator(
+//                pageIndicatorState = pageIndicatorState,
+//                modifier = Modifier.align(Alignment.TopCenter)
+//            )
+//        }
+//    }
+//}
 
 @Composable
-private fun Igiari(context: Context) {
-    val maxPages = 3
-    var selectedPage by remember { mutableIntStateOf(1) }
-    var finalValue by remember { mutableIntStateOf(1) }
+fun Objection(context: Context) {
+    val navController = rememberSwipeDismissableNavController()
+    val navHostState = rememberSwipeDismissableNavHostState()
 
+    // Track current page for page indicator
+
+    var currentPage by remember { mutableStateOf(0) }
+    val totalPages = 2 // Number of main pages (Library and Player)
+    var finalValue by remember { mutableIntStateOf(0) }
     val animatedSelectedPage by
     animateFloatAsState(
-        targetValue = selectedPage.toFloat(), label = "",
+        targetValue = currentPage.toFloat(), label = "",
     ) {
         finalValue = it.toInt()
     }
@@ -138,63 +192,12 @@ private fun Igiari(context: Context) {
                 get() = finalValue
 
             override val pageCount: Int
-                get() = maxPages
+                get() = totalPages
         }
     }
 
-    Scaffold(
-        modifier = Modifier.fillMaxSize()
+    PlayerScaffold(
+        modifier = Modifier.fillMaxSize(),
+        navController = navController
     )
-    {
-        Box(
-            modifier = Modifier.fillMaxSize(),
-            contentAlignment = Alignment.Center
-        ) {
-            HorizontalPager(
-                modifier = Modifier.fillMaxSize(),
-                state = rememberPagerState(initialPage = 2, pageCount = { 3 })
-            ) { page ->
-                IgiariButton(
-                    Modifier.fillMaxSize(),
-                    { playMedia(context, R.raw.se00e) }
-                )
-//                ScalingLazyColumn(
-//                ) {
-//                    // ... other items
-//                    item {
-//                        Button(
-//                            modifier = Modifier.fillMaxSize(),
-//                            onClick = {}
-//                        ) { }
-//                    }
-//                    item {
-//                        Button(
-//                            modifier = Modifier.fillMaxSize(),
-//                            onClick = {}
-//                        ) { }
-//                    }
-//                }
-            }
-
-            HorizontalPageIndicator(pageIndicatorState = pageIndicatorState)
-        }
-    }
-}
-
-@Preview
-@Composable
-private fun IgiariButton(
-    modifier: Modifier = Modifier,
-    callBack: () -> Unit = {}
-) {
-    Button(
-        modifier = modifier,
-        onClick = callBack
-    ) {
-        Image(
-            modifier = Modifier.fillMaxSize(),
-            bitmap = ImageBitmap.imageResource(id = R.drawable.etc00a),
-            contentDescription = "play igiari sound"
-        )
-    }
 }

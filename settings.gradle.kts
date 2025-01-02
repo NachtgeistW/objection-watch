@@ -19,5 +19,5 @@ dependencyResolutionManagement {
     }
 }
 
-rootProject.name = "igiari-watch"
+rootProject.name = "objection-watch"
 include(":app")

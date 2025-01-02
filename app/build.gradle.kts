@@ -1,16 +1,19 @@
 plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.kotlin.android)
+    //for kotlinx.serialization.Serializable
+    kotlin("plugin.serialization") version "2.1.0"
+    alias(libs.plugins.compose.compiler)
 }
 
 android {
-    namespace = "com.nachtgeistw.igiari_watch"
-    compileSdk = 34
+    namespace = "com.nachtgeistw.objectionwatch"
+    compileSdk = 35
 
     defaultConfig {
-        applicationId = "com.nachtgeistw.igiari_watch"
+        applicationId = "com.nachtgeistw.objectionwatch"
         minSdk = 30
-        targetSdk = 34
+        targetSdk = 35
         versionCode = 1
         versionName = "1.0"
         vectorDrawables {
@@ -54,10 +57,11 @@ dependencies {
     implementation(platform(libs.compose.bom))
     implementation(libs.ui)
     implementation(libs.ui.tooling.preview)
-    implementation(libs.compose.foundation)
     implementation(libs.wear.tooling.preview)
     implementation(libs.activity.compose)
     implementation(libs.core.splashscreen)
+    implementation(libs.compose.material3)
+    implementation(libs.material3.android)
     androidTestImplementation(platform(libs.compose.bom))
     androidTestImplementation(libs.ui.test.junit4)
     debugImplementation(libs.ui.tooling)
@@ -83,4 +87,7 @@ dependencies {
     // not an addition to androidx.compose.material:material.
     // If there are features from that you feel are missing from
     // androidx.wear.compose:compose-material please raise a bug to let us know.
+
+    implementation(libs.kotlinx.serialization.core)
+
 }

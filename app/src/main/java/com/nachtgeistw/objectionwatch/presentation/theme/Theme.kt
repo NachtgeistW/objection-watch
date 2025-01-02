@@ -1,10 +1,10 @@
-package com.nachtgeistw.igiari_watch.presentation.theme
+package com.nachtgeistw.objectionwatch.presentation.theme
 
 import androidx.compose.runtime.Composable
 import androidx.wear.compose.material.MaterialTheme
 
 @Composable
-fun IgiariwatchTheme(
+fun ObjectionwatchTheme(
     content: @Composable () -> Unit
 ) {
     /**
