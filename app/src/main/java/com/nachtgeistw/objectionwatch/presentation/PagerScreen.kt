@@ -14,7 +14,6 @@ import androidx.compose.ui.platform.LocalConfiguration
 import androidx.wear.compose.foundation.HierarchicalFocusCoordinator
 import androidx.wear.compose.foundation.pager.HorizontalPager
 import androidx.wear.compose.foundation.pager.PagerState
-import androidx.wear.compose.material.PageIndicatorState
 import androidx.wear.compose.material.Scaffold
 
 /**
@@ -86,20 +85,4 @@ private fun Modifier.optionalClip(shapeState: State<RoundedCornerShape?>): Modif
     } else {
         this
     }
-}
-
-/**
- * Bridge between Foundation PagerState and the Wear Compose PageIndicatorState.
- */
-public class PageScreenIndicatorState(
-    private val state: PagerState,
-) : PageIndicatorState {
-    override val pageCount: Int
-        get() = state.pageCount
-
-    override val pageOffset: Float
-        get() = state.currentPageOffsetFraction.takeIf { it.isFinite() } ?: 0f
-
-    override val selectedPage: Int
-        get() = state.currentPage
 }
