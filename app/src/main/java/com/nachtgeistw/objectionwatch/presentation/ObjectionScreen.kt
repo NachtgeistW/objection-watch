@@ -1,5 +1,7 @@
 package com.nachtgeistw.objectionwatch.presentation
 
+import android.content.Context
+import android.media.MediaPlayer
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.runtime.Composable
@@ -28,4 +30,9 @@ public fun ObjectionScreen(
             contentDescription = "play objection sound"
         )
     }
+}
+
+fun playMedia(context: Context, audioId: Int) {
+    val mediaPlayer = MediaPlayer.create(context, audioId);
+    mediaPlayer.start()
 }

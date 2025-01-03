@@ -103,11 +103,6 @@ class MainActivity : ComponentActivity(), SensorEventListener {
     }
 }
 
-fun playMedia(context: Context, audioId: Int) {
-    val mediaPlayer = MediaPlayer.create(context, audioId);
-    mediaPlayer.start()
-}
-
 //@Composable
 //private fun Igiari(context: Context) {
 //    val maxPages = 3
@@ -198,6 +193,7 @@ fun Objection(context: Context) {
 
     PlayerScaffold(
         modifier = Modifier.fillMaxSize(),
-        navController = navController
+        navController = navController,
+        context = context
     )
 }
